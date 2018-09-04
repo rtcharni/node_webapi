@@ -5,34 +5,34 @@ var itemSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
-    // },
-    // room: {
-    //     type: String,
-    //     required: true
-    // },
-    // brand: {
-    //     type: String,
-    // },
-    // qty: {
-    //     type: Number,
-    // },
-    // unit: {
-    //     type: String,
-    // },
-    // create_date: {
-    //     type: Date,
-    //     default: Date.now
+    },
+    room: {
+        type: String,
+        required: true
+    },
+    brand: {
+        type: String,
+    },
+    qty: {
+        type: Number,
+    },
+    unit: {
+        type: String,
+    },
+    create_date: {
+        type: Date,
+        default: Date.now
     }
 });
 
-var Item = module.exports = mongoose.model('Item',itemSchema);
+var Item = module.exports = mongoose.model('Item', itemSchema);
 
 // Get Items
 module.exports.getItems = (callback, limit) => {
     Item.find(callback).limit(limit);
 }
 
-// Get One Item
+// Get One Item / Or by name
 module.exports.getItemById = (id, callback) => {
     Item.findById(id, callback);
 }
