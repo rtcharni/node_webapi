@@ -37,5 +37,4 @@ module.exports.addUser = (user, callback) => {
             callback("User already exist")
         }
     })
-
 }
