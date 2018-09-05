@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var room = require('./room').Room;
+var room = require('./room').roomSchema;
 
 //var item = require('./item');
 
@@ -9,7 +9,7 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    rooms: 
+    rooms:
         [room]
     ,
     create_date: {

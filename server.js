@@ -8,7 +8,7 @@ Item = require('./models/item');
 User = require('./models/user');
 
 //Connect to mogoose
-mongoose.connect('mongodb://localhost/shopping', {useNewUrlParser : true});
+mongoose.connect('mongodb://localhost/shopping', { useNewUrlParser: true });
 var db = mongoose.connection;
 
 app.get('/', (req, res) => {
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/rooms', (req, res) => {
     Room.getRooms((err, rooms) => {
-        if (err){
+        if (err) {
             throw err;
         }
         res.json(rooms);
@@ -26,12 +26,15 @@ app.get('/api/rooms', (req, res) => {
 
 app.post('/api/rooms', (req, res) => {
     var room = req.body;
+    room.res.room;
     var room2 = {
         name: req.body.name,
         items: []
+
     }
+
     Room.addRoom(room2, (err, room2) => {
-        if (err){
+        if (err) {
             throw err;
         }
         res.json(room2);
@@ -40,7 +43,7 @@ app.post('/api/rooms', (req, res) => {
 
 app.get('/api/items', (req, res) => {
     Item.getItems((err, items) => {
-        if (err){
+        if (err) {
             throw err;
         }
         res.json(items);
@@ -49,7 +52,7 @@ app.get('/api/items', (req, res) => {
 
 app.get('/api/items/:_id', (req, res) => {
     Item.getItemById(req.params._id, (err, item) => {
-        if (err){
+        if (err) {
             throw err;
         }
         res.json(item);
@@ -60,7 +63,7 @@ app.get('/api/items/:_id', (req, res) => {
 app.post('/api/users', (req, res) => {
     const user = req.body;
     User.addUser(user, (err, newUser) => {
-        if (err){
+        if (err) {
             throw err;
         }
         res.json(newUser);
