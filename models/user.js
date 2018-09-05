@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var room = require('mongoose').model('Room').schema;
+var room = require('./room').Room;
 
 //var item = require('./item');
 

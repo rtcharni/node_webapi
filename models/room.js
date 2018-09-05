@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 //var item = require('mongoose').model('Item').schema;
-var item = require('./item').model('Item').schema;
+var item = require('./item').Item
 //var itemSchema = require('mongoose').model('Item',item.schema);
 
 //Schema
@@ -18,7 +18,7 @@ var roomSchema = mongoose.Schema({
     }
 });
 
-var Room = module.exports = mongoose.model('Room', roomSchema);
+var Room = module.exports.Room = mongoose.model('Room', roomSchema);
 
 // Get Rooms
 module.exports.getRooms = (callback, limit) => {

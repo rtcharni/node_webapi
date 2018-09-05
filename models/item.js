@@ -25,7 +25,7 @@ var itemSchema = mongoose.Schema({
     }
 });
 
-var Item = module.exports = mongoose.model('Item', itemSchema);
+var Item = module.exports.Item = mongoose.model('Item', itemSchema);
 
 // Get Items
 module.exports.getItems = (callback, limit) => {
