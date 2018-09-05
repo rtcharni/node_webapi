@@ -37,15 +37,16 @@ module.exports.addRoom = (room, callback) => {
 }
 
 //Update Item to Room, Tarviiko?? Vai addItem ja assign to Room??
-module.exports.updateRoom = (roomName, item, options, callback) => {
-    var existingRoom = Room.find({name: roomName},(err, room) => {
+module.exports.addItemToRoom = (roomName, item, options, callback) => {
+    Room.findOneAndUpdate({name: roomName}, {$push: {items:item}}, (err, room) => {
         if (err) {
             throw err;
         }
-        return room;
     });
     //Pitääkö tehdä se uusi item (new) tai add myös items schemaan??
-    existingRoom.items.add(item);
-    Room.findOneAndUpdate({name: roomName}, existingRoom, options, callback)
+    // existingRoom.items.push(item);
+    // let tempItems = [...existingRoom.items];
+    // tempItems.push(item);
+    // Room.findOneAndUpdate({name: roomName}, tempItems, options, callback);
 
 }

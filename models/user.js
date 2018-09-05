@@ -22,17 +22,20 @@ var User = mongoose.model('User', userSchema);
 module.exports.userSchema = userSchema;
 
 // Get User
-module.exports.getUserByName = (name, callback) => {
+const getUserByName = (name, callback) => {
     User.find({ name: name }, callback);
 }
 
+module.exports.getUserByName = getUserByName;
+
 // Add User
 module.exports.addUser = (user, callback) => {
-    getUserByName(user.name, (err, user) => {
+    
+    getUserByName(user.name, (err, foundUser) => {
         if (err) { // onko virhe jos ei löydy
             throw err;
         }
-        if (user.length === 0) {
+        if (foundUser.length === 0) {
             User.create(user, callback);
         } else {
             callback("User already exist")

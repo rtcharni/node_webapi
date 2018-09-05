@@ -26,6 +26,7 @@ app.get('/api/rooms', (req, res) => {
     });
 });
 
+//New Room
 app.post('/api/rooms', (req, res) => {
     var room = {
         name: req.body.name,
@@ -37,6 +38,21 @@ app.post('/api/rooms', (req, res) => {
         }
         res.json(room);
     });
+});
+
+//Item to room
+app.post('/api/rooms/:_name', (req, res) => {
+    const newItem = {
+        name: req.body.name,
+        room: req.params._name,
+        brand: req.body.brand,
+        qty: req.body.qty,
+        unit: req.body.unit,
+    }
+    Room.addItemToRoom(req.params._name, newItem, {}, (err, data) => {
+        res.json(data);
+    })
+
 });
 
 app.get('/api/items', (req, res) => {
