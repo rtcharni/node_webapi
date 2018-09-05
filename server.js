@@ -26,11 +26,15 @@ app.get('/api/rooms', (req, res) => {
 
 app.post('/api/rooms', (req, res) => {
     var room = req.body;
-    Room.addRoom(room, (err, room) => {
+    var room2 = {
+        name: req.body.name,
+        items: []
+    }
+    Room.addRoom(room2, (err, room2) => {
         if (err){
             throw err;
         }
-        res.json(room);
+        res.json(room2);
     });
 });
 
