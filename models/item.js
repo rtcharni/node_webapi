@@ -4,18 +4,17 @@ var mongoose = require('mongoose');
 var itemSchema = mongoose.Schema({
     name: {
         type: String,
-        // required: true
+        required: true
     },
     room: {
         type: String,
-        // required: true
+        required: true
     },
     brand: {
         type: String,
     },
     qty: {
         type: Number,
-        default: 1
     },
     unit: {
         type: String,

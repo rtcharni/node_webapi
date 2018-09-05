@@ -25,7 +25,7 @@ module.exports.roomSchema = roomSchema;
 module.exports.getRooms = (callback, limit) => {
     Room.find(callback).limit(limit);
 }
-// testi
+
 //Get One Room
 module.exports.getRoomByName = (name, callback) => {
     Room.find({ name: name }, callback);
