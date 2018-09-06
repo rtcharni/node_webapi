@@ -45,11 +45,16 @@ module.exports.getRoomByName = (req, res, next) => {
     // call next middleware
 }
 
-//Get One Room
+//Get One Roomname
 const getRoomByName =  (name, callback) => {
     Room.find({name: name}, callback);
 }
 module.exports.getRoomByName = getRoomByName;
+
+//Get Items from Room
+module.exports.getItemsFromRoom = (roomname, callback) => {
+    Room.find({name: roomname}, callback);
+}
 
 // Add Room
 module.exports.addRoom = (room, callback) => {

@@ -6,6 +6,7 @@ var handleResponse = require('./utils/response-handler');
 var addRoomtoUser = require('./models/user').addRoomtoUser;
 var getUser = require('./models/user').getUser;
 var getRoomByName = require('./models/room').getRoomByName;
+var getItemsFromRoom = require('./models/room').getItemsFromRoom;
 
 app.use(bodyParser.json());
 
@@ -81,11 +82,24 @@ app.post('/api/items', (req, res) => {
 app.get('/api/items', (req, res) => {
     Item.getItems((err, items) => {
         if (err) {
-            throw err;
+            handleResponse(err);
+        } else {
+            res.json(items);
         }
-        res.json(items);
     });
 });
+
+//Get all Items from Room
+app.get('/api/rooms/:roomname/items'), (req, res) => {
+    console.log(req.params.roomname);
+    getItemsFromRoom(req.params.roomname, (err, items) => {
+        if (err) {
+            handleResponse(err);
+        } else {
+            res.json(items);
+        }
+    })
+}
 
 //Add new User
 app.post('/api/users', (req, res) => {
