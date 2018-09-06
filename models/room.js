@@ -26,27 +26,54 @@ module.exports.getRooms = (callback, limit) => {
     Room.find(callback).limit(limit);
 }
 
+//Get Room by Name LOCALS
+module.exports.getRoomByName = (req, res, next) => {
+    console.log('jotain')
+    Room.find({name: req.params.roomname}, (err, docs) => {
+        console.log(err)
+        if (err) {
+            handleResponse(err)
+        } else {
+            res.locals.room = docs;
+            console.log(typeof docs)
+            console.log(docs)
+            next();
+        }
+    })
+    // get room from db
+    // when done, add room object to res.locals
+    // call next middleware
+}
+
 //Get One Room
-module.exports.getRoomByName = (name, callback) => {
+const getRoomByName =  (name, callback) => {
     Room.find({name: name}, callback);
 }
+module.exports.getRoomByName = getRoomByName;
 
 // Add Room
 module.exports.addRoom = (room, callback) => {
-    Room.create(room, callback);
+    getRoomByName(room.name, (err, foundRoom) => {
+        if (err) {
+            throw err;
+        }
+        if (foundRoom.length === 0) {
+            Room.create(room, callback);
+        } else {
+            callback({
+
+            });
+        }
+    })    
 }
 
 //Update Item to Room, Tarviiko?? Vai addItem ja assign to Room??
 module.exports.addItemToRoom = (roomName, item, options, callback) => {
     Room.findOneAndUpdate({name: roomName}, {$push: {items:item}}, (err, room) => {
         if (err) {
-            throw err;
+            callback(err);
+        } else {
+            callback(err,room)
         }
     });
-    //Pitääkö tehdä se uusi item (new) tai add myös items schemaan??
-    // existingRoom.items.push(item);
-    // let tempItems = [...existingRoom.items];
-    // tempItems.push(item);
-    // Room.findOneAndUpdate({name: roomName}, tempItems, options, callback);
-
 }
