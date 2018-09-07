@@ -22,21 +22,19 @@ var Room = mongoose.model('Room', roomSchema);
 module.exports.roomSchema = roomSchema;
 
 // Get Rooms
-module.exports.getRooms = (callback, limit) => {
-    Room.find(callback).limit(limit);
+module.exports.getRooms = (callback) => {
+    Room.find(callback);
 }
 
-//Get Room by Name LOCALS
-module.exports.getRoomByName = (req, res, next) => {
-    console.log('jotain')
+//Get Room by Name MIDDLEWARE
+module.exports.getRoomByNameMiddleware = (req, res, next) => {
     Room.find({name: req.params.roomname}, (err, docs) => {
-        console.log(err)
         if (err) {
             handleResponse(err)
+        } else if (!docs.length) {
+            //send 204 empty res
         } else {
-            res.locals.room = docs;
-            console.log(typeof docs)
-            console.log(docs)
+            res.locals.room = docs[0];
             next();
         }
     })
@@ -60,14 +58,12 @@ module.exports.getItemsFromRoom = (roomname, callback) => {
 module.exports.addRoom = (room, callback) => {
     getRoomByName(room.name, (err, foundRoom) => {
         if (err) {
-            throw err;
+            callback(err);
         }
         if (foundRoom.length === 0) {
             Room.create(room, callback);
         } else {
-            callback({
-
-            });
+            callback({Room_Already_Exist: foundRoom[0].name})
         }
     })    
 }

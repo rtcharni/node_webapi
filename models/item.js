@@ -29,8 +29,8 @@ var Item = mongoose.model('Item', itemSchema);
 module.exports.itemSchema = itemSchema;
 
 // Get Items
-module.exports.getItems = (callback, limit) => {
-    Item.find(callback).limit(limit);
+module.exports.getItems = (callback) => {
+    Item.find(callback);
 }
 
 // Get One Item / Or by name
