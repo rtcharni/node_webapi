@@ -23,6 +23,8 @@ mongoose.set('useFindAndModify',false);
 
 var db = mongoose.connection;
 
+app.get('/',)
+
 app.get('/', (req, res) => {
     res.send('This is secret path, you will be tracked and hunted, pray and RUN!!');
 });
@@ -103,7 +105,7 @@ app.get('/api/rooms/:roomname/items', (req, res) => {
             res.json(items[0]);
         }
     })
-})
+})  
 
 //Get one User
 app.get('/api/users/:username', (req, res, next) => {
