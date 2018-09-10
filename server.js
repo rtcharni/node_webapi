@@ -11,6 +11,8 @@ var getRoomByNameMiddleware = require('./models/room').getRoomByNameMiddleware;
 var getItemsFromRoom = require('./models/room').getItemsFromRoom;
 var addUser = require('./models/user').addUser;
 var getItems = require('./models/item').getItems;
+var jwt = require('jsonwebtoken');
+
 app.use(bodyParser.json());
 
 Room = require('./models/room');
@@ -19,24 +21,67 @@ User = require('./models/user').User;
 
 //Connect to mogoose
 mongoose.connect('mongodb://localhost/shopping', { useNewUrlParser: true });
-mongoose.set('useFindAndModify',false);
-
+mongoose.set('useFindAndModify', false);
 var db = mongoose.connection;
 
-app.get('/',)
+//Token Implementation
+app.post('/api/login', (req, res) => {
+    //Test User
+    let user = {
+        id: 1,
+        username: 'Roman',
+        email: 'roman@jotain.com'
+    }
+    //Generate Token
+    jwt.sign({ user }, 'Salaisuus', {expiresIn: '15m'}, (err, token) => {
+        res.send({
+            token: token
+        })
+
+    })
+})
+
+//Token format: Authorization: Bearer <token>
+const verifyToken = (req, res, next) => {
+    //Get auth header value
+    const bearerHeader = req.headers['authorization'];
+    //Check if bearer is undefined
+    if (typeof bearerHeader !== 'undefined') {
+        //Split at the space
+        const bearer = bearerHeader.split(' ');
+        //Get Token
+        const bearerToken = bearer[1];
+        //Set the Token
+        req.token = bearerToken;
+        //Next middleware
+        next();
+    } else {
+        //Forbidden
+        res.send({ message: 'Forbidden' });
+    }
+}
+
 
 app.get('/', (req, res) => {
     res.send('This is secret path, you will be tracked and hunted, pray and RUN!!');
 });
 
 //Get all Rooms
-app.get('/api/rooms', (req, res) => {
-    Room.getRooms((err, rooms) => {
-        if (err) {
-            res.send(err);
+app.get('/api/rooms', verifyToken, (req, res) => {
+    jwt.verify(req.token, 'Salaisuus', (err, authdata) => {
+
+        if (err) res.send({ message: `Error, ${err}` })
+        else {
+            Room.getRooms((err, rooms) => {
+                if (err) {
+                    res.send(err);
+                }
+                res.json({authdata:authdata, rooms:rooms});
+            });
         }
-        res.json(rooms);
     });
+
+
 });
 
 //New Room
@@ -100,12 +145,12 @@ app.get('/api/rooms/:roomname/items', (req, res) => {
         if (err) {
             handleResponse(err);
         } else if (items.length === 0) {
-            res.send({Not_Found: req.params.roomname})
+            res.send({ Not_Found: req.params.roomname })
         } else {
             res.json(items[0]);
         }
     })
-})  
+})
 
 //Get one User
 app.get('/api/users/:username', (req, res, next) => {
@@ -113,7 +158,7 @@ app.get('/api/users/:username', (req, res, next) => {
         if (err) {
             handleResponse(err);
         } else if (doc.length === 0) {
-            res.send({User_Not_Found: req.params.username})
+            res.send({ User_Not_Found: req.params.username })
         } else {
             res.json(doc[0]);
         }
@@ -139,7 +184,7 @@ app.post('/api/users', (req, res) => {
 
 //Add User to Room
 app.post('/api/rooms/:roomname/users/:username', getRoomByNameMiddleware, getUserMiddleware, addRoomtoUserMiddleware, (req, res) => {
-    res.send({Task: 'Completed'});
+    res.send({ Task: 'Completed' });
     //handleResponse()
 })
 
