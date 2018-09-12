@@ -19,6 +19,10 @@ var itemSchema = mongoose.Schema({
     unit: {
         type: String,
     },
+    ready: {
+        type: Boolean,
+        default: false
+    },
     create_date: {
         type: Date,
         default: Date.now
