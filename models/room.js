@@ -68,7 +68,7 @@ module.exports.addRoom = (room, callback) => {
     })    
 }
 
-//Update Item to Room, Tarviiko?? Vai addItem ja assign to Room??
+//Add Item to Room
 module.exports.addItemToRoom = (roomName, item, options, callback) => {
     Room.findOneAndUpdate({name: roomName}, {$push: {items:item}}, (err, room) => {
         if (err) {

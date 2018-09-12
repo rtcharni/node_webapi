@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var cors = require('cors');
 var handleResponse = require('./utils/response-handler');
 var addRoomtoUserMiddleware = require('./models/user').addRoomtoUserMiddleware;
 var getUserMiddleware = require('./models/user').getUserMiddleware;
@@ -13,6 +14,7 @@ var addUser = require('./models/user').addUser;
 var getItems = require('./models/item').getItems;
 var jwt = require('jsonwebtoken');
 
+app.use(cors());
 app.use(bodyParser.json());
 
 Room = require('./models/room');
@@ -66,19 +68,32 @@ app.get('/', (req, res) => {
     res.send('This is secret path, you will be tracked and hunted, pray and RUN!!');
 });
 
-//Get all Rooms
-app.get('/api/rooms', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'Salaisuus', (err, authdata) => {
+app.get('/api/rooms/:roomname', (req, res) => {
+    Room.getRoomByName(req.params.roomname, (err, room) => {
+        if (err) {res.json(err)}
+        else {res.json(room)}
+    })
+})
 
-        if (err) res.send({ message: `Error, ${err}` })
-        else {
-            Room.getRooms((err, rooms) => {
-                if (err) {
-                    res.send(err);
-                }
-                res.json({authdata:authdata, rooms:rooms});
-            });
+//Get all Rooms //Verify otettu POIS!
+app.get('/api/rooms', (req, res) => {
+    // jwt.verify(req.token, 'Salaisuus', (err, authdata) => {
+
+    //     if (err) res.send({ message: `Error, ${err}` })
+    //     else {
+    //         Room.getRooms((err, rooms) => {
+    //             if (err) {
+    //                 res.send(err);
+    //             }
+    //             res.json({authdata:authdata, rooms:rooms});
+    //         });
+    //     }
+    // });
+    Room.getRooms((err, rooms) => {
+        if (err) {
+            res.send(err);
         }
+        res.json(rooms);
     });
 
 
@@ -108,6 +123,7 @@ app.post('/api/rooms/:roomname/items', (req, res) => {
         brand: req.body.brand,
         qty: req.body.qty,
         unit: req.body.unit,
+        ready: req.body.ready
     }
     Room.addItemToRoom(req.params.roomname, newItem, {}, (err, data) => {
         res.json(data);
@@ -126,6 +142,23 @@ app.post('/api/items', (req, res) => {
     Room.addItemToRoom(req.body.roomname, newItem, {}, (err, data) => {
         res.json(data);
     })
+})
+
+app.put('/api/rooms/:roomname/items/:id', (req, res) => {
+    const updatedItem = {
+        _id: req.params.id,
+        name: req.body.name,
+        room: req.params.roomname,
+        brand: req.body.brand,
+        qty: req.body.qty,
+        unit: req.body.unit,
+        ready: req.body.ready
+    }
+    // updateItemInRoom(req.params.id, updatedItem, (err, done) => {
+    //     if (err) {res.send(err)}
+    //     else {res.json(done)}
+    // })
+
 })
 
 //Get all Items
