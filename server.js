@@ -130,20 +130,6 @@ app.post('/api/rooms/:roomname/items', (req, res) => {
     })
 });
 
-//Add item to Room
-app.post('/api/items', (req, res) => {
-    const newItem = {
-        name: req.body.name,
-        room: req.body.roomname,
-        brand: req.body.brand,
-        qty: req.body.qty,
-        unit: req.body.unit,
-    }
-    Room.addItemToRoom(req.body.roomname, newItem, {}, (err, data) => {
-        res.json(data);
-    })
-})
-
 app.put('/api/rooms/:roomname/items/:id', (req, res) => {
     const updatedItem = {
         _id: req.params.id,

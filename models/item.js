@@ -47,3 +47,7 @@ module.exports.addItem = (item, callback) => {
     Item.create(item, callback);
 }
 
+module.exports.updateItem = (item, callback) => {
+    Item.findByIdAndUpdate(item._id, item, callback);
+}
+
