@@ -29,15 +29,15 @@ mongoose.set('useFindAndModify', false);
 var db = mongoose.connection;
 
 //Token Implementation
-app.post('/api/login', (req, res) => {
-    //Test User
-    let user = {
-        id: 1,
-        username: 'Roman',
-        email: 'roman@jotain.com'
+app.get('/api/token/:roomname/:pin', (req, res) => {
+    //Payload
+    let payload = {
+        roomname: req.params.roomname,
+        pin: req.params.pin
     }
     //Generate Token
-    jwt.sign({ user }, 'Salaisuus', {expiresIn: '15m'}, (err, token) => {
+    jwt.sign({ payload }, 'Salaisuus', {expiresIn: '15m'}, (err, token) => {
+        if (err) { res.json(err) }
         res.send({
             token: token
         })
