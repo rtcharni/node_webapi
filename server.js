@@ -12,6 +12,7 @@ var getRoomByNameMiddleware = require('./models/room').getRoomByNameMiddleware;
 var getItemsFromRoom = require('./models/room').getItemsFromRoom;
 var addUser = require('./models/user').addUser;
 var getItems = require('./models/item').getItems;
+var updateItem = require('./models/room').updateItem;
 var jwt = require('jsonwebtoken');
 
 app.use(cors());
@@ -95,8 +96,6 @@ app.get('/api/rooms', (req, res) => {
         }
         res.json(rooms);
     });
-
-
 });
 
 //New Room
@@ -140,11 +139,12 @@ app.put('/api/rooms/:roomname/items/:id', (req, res) => {
         unit: req.body.unit,
         ready: req.body.ready
     }
-    // updateItemInRoom(req.params.id, updatedItem, (err, done) => {
-    //     if (err) {res.send(err)}
-    //     else {res.json(done)}
-    // })
-
+    console.log(updatedItem);
+    updateItem(updatedItem, (err, done) => {
+        console.log(done, err) 
+        if (err) {res.send(err)}
+        else {res.json(done)}
+    })
 })
 
 //Get all Items

@@ -78,3 +78,10 @@ module.exports.addItemToRoom = (roomName, item, options, callback) => {
         }
     });
 }
+
+module.exports.updateItem = (item, callback) => {
+    // Item.findByIdAndUpdate(item._id, { $set: { name: item.name } }, {new: true}, callback);
+    // Item.findByIdAndUpdate(item._id, item, {new: true}, callback);
+    // Item.update({_id: item._id}, { $set: { name: item.name } }, callback);
+    Room.findOneAndUpdate({name: item.room, "items._id": item._id  }, { $set: { "items.$": item } }, {new: true}, callback);
+}
