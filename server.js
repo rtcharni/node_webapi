@@ -13,6 +13,7 @@ var getItemsFromRoom = require('./models/room').getItemsFromRoom;
 var addUser = require('./models/user').addUser;
 var getItems = require('./models/item').getItems;
 var updateItem = require('./models/room').updateItem;
+var deleteItem = require('./models/room').deleteItem;
 var jwt = require('jsonwebtoken');
 
 app.use(cors());
@@ -124,11 +125,12 @@ app.post('/api/rooms/:roomname/items', (req, res) => {
         unit: req.body.unit,
         ready: req.body.ready
     }
-    Room.addItemToRoom(req.params.roomname, newItem, {}, (err, data) => {
+    Room.addItemToRoom(req.params.roomname, newItem, (err, data) => {
         res.json(data);
     })
 });
 
+//Edit Item
 app.put('/api/rooms/:roomname/items/:id', (req, res) => {
     const updatedItem = {
         _id: req.params.id,
@@ -142,6 +144,18 @@ app.put('/api/rooms/:roomname/items/:id', (req, res) => {
     console.log(updatedItem);
     updateItem(updatedItem, (err, done) => {
         console.log(done, err) 
+        if (err) {res.send(err)}
+        else {res.json(done)}
+    })
+})
+
+//Delete Item
+app.delete('/api/rooms/:roomname/items/:id', (req, res) => {
+    const itemToDelete = {
+        _id: req.params.id,
+        room: req.params.roomname
+    }
+    deleteItem(itemToDelete, (err, done) => {
         if (err) {res.send(err)}
         else {res.json(done)}
     })

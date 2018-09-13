@@ -69,8 +69,8 @@ module.exports.addRoom = (room, callback) => {
 }
 
 //Add Item to Room
-module.exports.addItemToRoom = (roomName, item, options, callback) => {
-    Room.findOneAndUpdate({name: roomName}, {$push: {items:item}}, (err, room) => {
+module.exports.addItemToRoom = (roomName, item, callback) => {
+    Room.findOneAndUpdate({name: roomName}, {$push: {items:item}}, {new: true}, (err, room) => {
         if (err) {
             callback(err);
         } else {
@@ -84,4 +84,8 @@ module.exports.updateItem = (item, callback) => {
     // Item.findByIdAndUpdate(item._id, item, {new: true}, callback);
     // Item.update({_id: item._id}, { $set: { name: item.name } }, callback);
     Room.findOneAndUpdate({name: item.room, "items._id": item._id  }, { $set: { "items.$": item } }, {new: true}, callback);
+}
+
+module.exports.deleteItem = (item, callback) => {
+    Room.findOneAndUpdate({name: item.room }, { $pull: { items: { _id: item._id } } }, {new: true}, callback);
 }
