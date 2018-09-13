@@ -57,6 +57,10 @@ const verifyToken = (req, res, next) => {
         const bearerToken = bearer[1];
         //Set the Token
         req.token = bearerToken;
+        //OMA SETTI: verify token jo nyt...!!!!!!!!!!!!!!!
+        jwt.verify(bearerToken, 'Salaisuus', (err) => {
+            if (err) {res.send({message: 'Error with token validation'})}
+        })
         //Next middleware
         next();
     } else {
