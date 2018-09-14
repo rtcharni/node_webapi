@@ -41,35 +41,28 @@ app.get('/api/token/:roomname/:pin', (req, res) => {
         res.send({
             token: token
         })
-
     })
 })
 
 //Token format: Authorization: Bearer <token>
 const verifyToken = (req, res, next) => {
-    //Get auth header value
     const bearerHeader = req.headers['authorization'];
-    //Check if bearer is undefined
     if (typeof bearerHeader !== 'undefined') {
-        //Split at the space
         const bearer = bearerHeader.split(' ');
-        //Get Token
         const bearerToken = bearer[1];
-        //Set the Token
         req.token = bearerToken;
         //OMA SETTI: verify token jo nyt...!!!!!!!!!!!!!!!
         jwt.verify(bearerToken, 'Salaisuus', (err) => {
             //MIKÄ STATUS PITÄÄ LÄHETTÄÄ!!
             if (err) {res.send({message: 'Error with token validation'})}
         })
-        //Next middleware
+        //Next Middleware
         next();
     } else {
-        //Forbidden
+        //Forbidden EI pääsyä
         res.send({ message: 'Forbidden' });
     }
 }
-
 
 app.get('/', (req, res) => {
     res.send('This is secret path, you will be tracked and hunted, pray and RUN!!');
