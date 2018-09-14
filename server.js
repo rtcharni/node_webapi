@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
     res.send('This is secret path, you will be tracked and hunted, pray and RUN!!');
 });
 
-app.get('/api/rooms/:roomname', (req, res) => {
+app.get('/api/rooms/:roomname', verifyToken, (req, res) => {
     Room.getRoomByName(req.params.roomname, (err, room) => {
         if (err) {res.json(err)}
         else {res.json(room)}
